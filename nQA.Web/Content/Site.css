@@ -355,10 +355,6 @@ fieldset {
     margin: 0;
     padding: 0;
 }
-
-    fieldset legend {
-        display: none;
-    }
     
     fieldset ol {
         padding: 0;

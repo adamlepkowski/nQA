@@ -24,9 +24,7 @@ namespace nQA.Web
             bundles.Add(new StyleBundle("~/bundles/css").Include("~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/bundles/themes/base/css").Include(
-                        "~/Content/themes/base/*.css"));
-
-            BundleTable.EnableOptimizations = true;
+                        "~/Content/themes/base/*.css"));         
         }
     }
 }

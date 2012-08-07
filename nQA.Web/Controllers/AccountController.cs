@@ -4,6 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+
+using DotNetOpenAuth.Messaging;
+using DotNetOpenAuth.OpenId;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
+using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
+using DotNetOpenAuth.OpenId.RelyingParty;
+
 using nQA.Web.Models;
 
 namespace nQA.Web.Controllers
@@ -12,46 +19,57 @@ namespace nQA.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-
         //
         // GET: /Account/Login
 
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
-
-        //
-        // POST: /Account/Login
-
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult Login(LoginModel model, string returnUrl)
-        {
-            if (ModelState.IsValid)
+            var openid = new OpenIdRelyingParty();
+            var response = openid.GetResponse();
+            if (response == null)
             {
-                if (Membership.ValidateUser(model.UserName, model.Password))
+                Identifier id;
+                if (Identifier.TryParse(Request.Form["openid_identifier"], out id))
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl))
+                    try
                     {
-                        return Redirect(returnUrl);
+                        var request = openid.CreateRequest(Request.Form["openid_identifier"]);
+                        var fetchRequest = new FetchRequest();
+                        fetchRequest.Attributes.AddRequired(WellKnownAttributes.Contact.Email);
+                        fetchRequest.Attributes.AddOptional(WellKnownAttributes.Name.First);
+                        fetchRequest.Attributes.AddOptional(WellKnownAttributes.Name.Last);
+                        request.AddExtension(fetchRequest);
+
+                        return request.RedirectingResponse.AsActionResult();
                     }
-                    else
+                    catch (ProtocolException ex)
                     {
-                        return RedirectToAction("Index", "Home");
+                        //TODO: Log
+                        ViewBag.Message = ex.Message;
+                        return View();
                     }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                }
+                
+                return View();
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            switch (response.Status)
+            {
+
+                case AuthenticationStatus.Authenticated:
+                    //TODO: Add logic responsible for logging or registration process
+                    return View();
+
+                case AuthenticationStatus.Canceled:
+                    ModelState.AddModelError("", "Canceled at provider");
+                    return View();
+                case AuthenticationStatus.Failed:
+                    ModelState.AddModelError("", "Problem occured" + response.Exception.Message);
+                    return View();
+            }
+
+            return new EmptyResult();
         }
 
         //
