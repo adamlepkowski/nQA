@@ -6,8 +6,7 @@ namespace nQA.Web
     public class BundleConfig
     {
         public static void RegisterBundles(BundleCollection bundles)
-        {
-            bundles.EnableDefaultBundles();
+        {            
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.*"));
 

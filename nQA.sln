@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nQA.Web", "nQA.Web\nQA.Web.csproj", "{FF96C4F2-E7B8-4CB3-BCB7-0E29B657BB3C}"
 EndProject
 Global
