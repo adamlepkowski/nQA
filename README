@@ -1,1 +1,4 @@
-nQA - Question and Answer system built with ASP.NET MVC 4, Razor, C#, nHibernate, fluentNHibernate
+nQA - Question and Answer system built with ASP.NET MVC 4, Razor, C#, Entity Framework.
+
+At first I thought to make this system using NHiberante but things has changed. System will be done using Entity Framework with code first approach.
+
