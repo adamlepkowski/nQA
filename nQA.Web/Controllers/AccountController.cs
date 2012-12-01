@@ -12,6 +12,7 @@ using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using DotNetOpenAuth.OpenId.RelyingParty;
 
 using nQA.Web.Models;
+using nQA.Web.Services;
 
 namespace nQA.Web.Controllers
 {
@@ -19,46 +20,31 @@ namespace nQA.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IOpenIdMembershipService _openIdMembershipService;
+
+        public AccountController(IOpenIdMembershipService openIdMembershipService)
+        {
+            _openIdMembershipService = openIdMembershipService;
+        }
+
         //
         // GET: /Account/Login
 
         [AllowAnonymous]
         public ActionResult Login()
         {
-            var openid = new OpenIdRelyingParty();
-            var response = openid.GetResponse();
+            IAuthenticationResponse response = _openIdMembershipService.GetResponse();
             if (response == null)
             {
-                Identifier id;
-                if (Identifier.TryParse(Request.Form["openid_identifier"], out id))
-                {
-                    try
-                    {
-                        var request = openid.CreateRequest(Request.Form["openid_identifier"]);
-                        var fetchRequest = new FetchRequest();
-                        fetchRequest.Attributes.AddRequired(WellKnownAttributes.Contact.Email);
-                        fetchRequest.Attributes.AddOptional(WellKnownAttributes.Name.First);
-                        fetchRequest.Attributes.AddOptional(WellKnownAttributes.Name.Last);
-                        request.AddExtension(fetchRequest);
-
-                        return request.RedirectingResponse.AsActionResult();
-                    }
-                    catch (ProtocolException ex)
-                    {
-                        //TODO: Log
-                        ViewBag.Message = ex.Message;
-                        return View();
-                    }
-                }
-                
                 return View();
             }
 
             switch (response.Status)
             {
-
                 case AuthenticationStatus.Authenticated:
                     //TODO: Add logic responsible for logging or registration process
+                    var openIdUser = _openIdMembershipService.ResponseIntoUser(response);
+                    //FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
                     return View();
 
                 case AuthenticationStatus.Canceled:
@@ -70,6 +56,25 @@ namespace nQA.Web.Controllers
             }
 
             return new EmptyResult();
+        }
+
+        //
+        // POST: /Account/Login
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Login(string openid_identifier)
+        {
+            try
+            {
+                var request = _openIdMembershipService.CreateRequest(openid_identifier);
+                return request.RedirectingResponse.AsActionResult();
+            }
+            catch (ProtocolException ex)
+            {
+                //TODO: LOG
+            }
+            return View();
         }
 
         //
