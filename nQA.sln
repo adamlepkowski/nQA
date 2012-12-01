@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nQA.Model", "nQA.Model\nQA.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9CD2A8C6-D373-4037-A4F4-BA95A00A091D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nQA.Web.Tests", "Tests\nQA.Web.Tests\nQA.Web.Tests.csproj", "{B7749815-EC66-4852-B6BB-E788B3B7A5C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{2BF81764-A6BA-4108-9B89-F10DE073859A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF81764-A6BA-4108-9B89-F10DE073859A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BF81764-A6BA-4108-9B89-F10DE073859A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7749815-EC66-4852-B6BB-E788B3B7A5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7749815-EC66-4852-B6BB-E788B3B7A5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7749815-EC66-4852-B6BB-E788B3B7A5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7749815-EC66-4852-B6BB-E788B3B7A5C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B7749815-EC66-4852-B6BB-E788B3B7A5C7} = {9CD2A8C6-D373-4037-A4F4-BA95A00A091D}
 	EndGlobalSection
 EndGlobal
