@@ -11,16 +11,28 @@ namespace nQA.Web.Tests
     public class AccountControllerTest
     {
         [Test]
-        public void Login_RequestFromTheUser_OpenLoginPage()
+        public void Login_UnauthorizationUserOpenLoginPage_OpenLoginPage()
         {
-            var openIdMembershipService = Substitute.For<IOpenIdMembershipService>();
-            openIdMembershipService.GetResponse().Returns(info => null);
+            var openIdMembershipServiceStub = Substitute.For<IOpenIdMembershipService>();
+            openIdMembershipServiceStub.GetResponse().Returns(info => null);
 
-            var controller = new AccountController(openIdMembershipService);
+            var controller = new AccountController(openIdMembershipServiceStub);
 
             var actionResult = controller.Login() as ViewResult;
 
             Assert.IsEmpty(actionResult.ViewName);
+        }
+
+        [Test]
+        public void Login_Executed_GetResponseFromOpenIdMembershipServiceOnce()
+        {
+            var idMembershipServiceMock = Substitute.For<IOpenIdMembershipService>();
+
+            var controller = new AccountController(idMembershipServiceMock);
+
+            controller.Login();
+
+            idMembershipServiceMock.Received(1).GetResponse();
         }
     }
 }
