@@ -11,6 +11,7 @@ using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using DotNetOpenAuth.OpenId.RelyingParty;
 
+using nQA.Model.Interfaces;
 using nQA.Web.Models;
 using nQA.Web.Services;
 
@@ -20,11 +21,17 @@ namespace nQA.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly IOpenIdMembershipService _openIdMembershipService;
+        private readonly IOpenIdMembershipService openIdMembershipService;
+        private readonly IAuthenticationProvider authenticationProvider;
+        private readonly IUserService userService;
+        private readonly IUserProvider userProvider;
 
-        public AccountController(IOpenIdMembershipService openIdMembershipService)
+        public AccountController(IOpenIdMembershipService openIdMembershipService, IAuthenticationProvider authenticationProvider, IUserService userService, IUserProvider userProvider)
         {
-            _openIdMembershipService = openIdMembershipService;
+            this.openIdMembershipService = openIdMembershipService;
+            this.authenticationProvider = authenticationProvider;
+            this.userService = userService;
+            this.userProvider = userProvider;
         }
 
         //
@@ -33,7 +40,7 @@ namespace nQA.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-            IAuthenticationResponse response = _openIdMembershipService.GetResponse();
+            IAuthenticationResponse response = this.openIdMembershipService.GetResponse();
             if (response == null)
             {
                 return View();
@@ -42,16 +49,21 @@ namespace nQA.Web.Controllers
             switch (response.Status)
             {
                 case AuthenticationStatus.Authenticated:
-                    //TODO: Add logic responsible for logging or registration process
-                    var openIdUser = _openIdMembershipService.ResponseIntoUser(response);
-                    //FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
-                    return View();
+                    // get information about user from response
+                    var openIdUser = this.openIdMembershipService.ResponseIntoUser(response);
 
-                case AuthenticationStatus.Canceled:
-                    ModelState.AddModelError("", "Canceled at provider");
+                    // create or retrieve user
+                    userProvider.CurrentUser = userService.Provide(openIdUser.ClaimedIdentifier, openIdUser.Nickname, openIdUser.FullName, openIdUser.Email);
+
+                    // authenticate user
+                    authenticationProvider.RedirectFromLoginPage(userProvider.CurrentUser.Login, true);
+                    break;
+                case AuthenticationStatus.Canceled: //Canceled
+                    ModelState.AddModelError("error", "Provider canceled request.");
                     return View();
-                case AuthenticationStatus.Failed:
-                    ModelState.AddModelError("", "Problem occured" + response.Exception.Message);
+                default:
+                    ModelState.AddModelError("error", "Problem occured with retriving data from OpenId provider.");
+                    // TODO: log it
                     return View();
             }
 
@@ -67,7 +79,7 @@ namespace nQA.Web.Controllers
         {
             try
             {
-                var request = _openIdMembershipService.CreateRequest(openid_identifier);
+                var request = this.openIdMembershipService.CreateRequest(openid_identifier);
                 return request.RedirectingResponse.AsActionResult();
             }
             catch (ProtocolException ex)
@@ -82,7 +94,8 @@ namespace nQA.Web.Controllers
 
         public ActionResult LogOff()
         {
-            FormsAuthentication.SignOut();
+            authenticationProvider.SignOut();
+            userProvider.CurrentUser = null;
 
             return RedirectToAction("Index", "Home");
         }

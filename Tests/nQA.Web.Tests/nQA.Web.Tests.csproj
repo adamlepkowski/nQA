@@ -58,6 +58,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <Choose>
@@ -81,6 +82,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\nQA.Model\nQA.Model.csproj">
+      <Project>{2BF81764-A6BA-4108-9B89-F10DE073859A}</Project>
+      <Name>nQA.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\nQA.Web\nQA.Web.csproj">
       <Project>{ff96c4f2-e7b8-4cb3-bcb7-0e29b657bb3c}</Project>
       <Name>nQA.Web</Name>
