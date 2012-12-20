@@ -140,6 +140,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Services\AuthenticationProvider.cs" />
+    <Compile Include="Services\IAuthenticationProvider.cs" />
+    <Compile Include="Services\IUserProvider.cs" />
+    <Compile Include="Services\UserProvider.cs" />
     <Compile Include="WebNinjectModule.cs" />
     <Compile Include="Services\IOpenIdMembershipService .cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -277,6 +281,12 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nQA.Model\nQA.Model.csproj">
+      <Project>{2BF81764-A6BA-4108-9B89-F10DE073859A}</Project>
+      <Name>nQA.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -293,7 +303,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50050</DevelopmentServerPort>
+          <DevelopmentServerPort>53118</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
