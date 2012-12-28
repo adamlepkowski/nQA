@@ -53,7 +53,7 @@ namespace nQA.Web.Controllers
                     var openIdUser = this.openIdMembershipService.ResponseIntoUser(response);
 
                     // create or retrieve user
-                    userProvider.CurrentUser = userService.Provide(openIdUser.ClaimedIdentifier, openIdUser.Nickname, openIdUser.FullName, openIdUser.Email);
+                    userProvider.CurrentUser = userService.Login(openIdUser.ClaimedIdentifier, openIdUser.Nickname, openIdUser.FullName, openIdUser.Email);
 
                     // authenticate user
                     authenticationProvider.RedirectFromLoginPage(userProvider.CurrentUser.Login, true);

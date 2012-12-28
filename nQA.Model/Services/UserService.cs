@@ -1,23 +1,36 @@
-﻿using nQA.Model.Entities;
+﻿using System;
+using nQA.Model.Entities;
 using nQA.Model.Interfaces;
 
 namespace nQA.Model.Services
 {
     public class UserService : IUserService
     {
-        public User CreateUser()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IRepository<User> UserRepository { get; set; }
 
-        public User Provide(string claimedIdentifier, string nickname, string fullName, string email)
+        public UserService(IRepository<User> userRepository)
         {
-            throw new System.NotImplementedException();
+            UserRepository = userRepository;
         }
-
-        public User CreateUser(string claimedIdentifier, string nickname, string fullName, string email)
+        
+        public User Login(string claimedIdentifier, string nickname, string fullName, string email)
         {
-            throw new System.NotImplementedException();
+            var user = UserRepository.FirstOrDefault(x => x.ClaimedIdentifier == claimedIdentifier);
+
+            if (user == null)
+            {
+                user = new User().CreateUser(claimedIdentifier, nickname, fullName, email);
+                UserRepository.Add(user);
+                UserRepository.SaveChanges();
+            }
+            else
+            {
+                user.LastVisitDate = DateTime.Now;
+                UserRepository.Update(user);
+                UserRepository.SaveChanges();
+            }
+
+            return user;
         }
     }
 }

@@ -84,7 +84,7 @@ namespace nQA.Web.Tests
                                                "openIdIdentifier"));
 
             var userServiceMock = Substitute.For<IUserService>();
-            userServiceMock.Provide("openIdIdentifier", "NickName", "FullName", "Email").Returns(new User { Login = "Login" });
+            userServiceMock.Login("openIdIdentifier", "NickName", "FullName", "Email").Returns(new User { Login = "Login" });
 
 
             var userProvider = Substitute.For<IUserProvider>();
@@ -96,7 +96,7 @@ namespace nQA.Web.Tests
 
             // TODO: refactor it - but how?
             openIdMembershipServiceMock.Received(1).ResponseIntoUser(authenticationResponseStub);
-            userServiceMock.Received().Provide("openIdIdentifier", "NickName", "FullName", "Email");
+            userServiceMock.Received().Login("openIdIdentifier", "NickName", "FullName", "Email");
             authenticationProviderMock.Received(1).RedirectFromLoginPage("Login", true);
         }
 
