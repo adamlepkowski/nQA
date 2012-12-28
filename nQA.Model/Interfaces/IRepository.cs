@@ -11,5 +11,6 @@ namespace nQA.Model.Interfaces
         T FindById(int id);
         void Add(T newEntity);
         void Remove(T entity);
+        void SaveChanges();
     }
 }
