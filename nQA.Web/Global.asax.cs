@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using nQA.Model;
 using nQA.Web.Services;
 
 namespace nQA.Web
@@ -23,7 +24,7 @@ namespace nQA.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(new WebNinjectModule()));
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(new ModelNinjectModule(), new WebNinjectModule()));
         }
     }
 }

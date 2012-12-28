@@ -13,7 +13,6 @@ namespace nQA.Web
             this.Bind<IOpenIdMembershipService>().To<OpenIdMembershipService>();
             this.Bind<IAuthenticationProvider>().To<AuthenticationProvider>();
             this.Bind<IUserProvider>().To<UserProvider>();
-            this.Bind<IUserService>().To<UserService>();
         }
     }
 }
