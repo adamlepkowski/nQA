@@ -12,5 +12,6 @@ namespace nQA.Model.Interfaces
         void Add(T newEntity);
         void Remove(T entity);
         void SaveChanges();
+        T FirstOrDefault(Expression<Func<T, bool>> predicate);
     }
 }

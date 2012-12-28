@@ -26,6 +26,11 @@ namespace nQA.Model.Repositories
             return _databaseContext.Set<T>().Where(predicate).ToList();
         }
 
+        public T FirstOrDefault(Expression<Func<T, bool>> predicate)
+        {
+            return _databaseContext.Set<T>().FirstOrDefault(predicate);
+        }
+
         public T FindById(int id)
         {
             return _databaseContext.Set<T>().Find(id);
