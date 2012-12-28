@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -39,6 +40,11 @@ namespace nQA.Model.Repositories
         public void Add(T newEntity)
         {
             _databaseContext.Set<T>().Add(newEntity);
+        }
+
+        public void Update(T entity)
+        {
+            _databaseContext.Entry(entity).State = EntityState.Modified;
         }
 
         public void Remove(T entity)

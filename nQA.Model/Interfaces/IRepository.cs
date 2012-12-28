@@ -10,6 +10,7 @@ namespace nQA.Model.Interfaces
         IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
         T FindById(int id);
         void Add(T newEntity);
+        void Update(T entity);
         void Remove(T entity);
         void SaveChanges();
         T FirstOrDefault(Expression<Func<T, bool>> predicate);
